@@ -7,6 +7,7 @@ import ImageUpload from "./pages/ImageUpload";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Data from "./pages/Data";
 
 const App = () => (
     <AuthProvider>
@@ -17,6 +18,7 @@ const App = () => (
                     <Route path="/" element={<Home />} />
                     <Route path="/upload" element={<ProtectedRoute element={<ImageUpload />} />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/data" element={<Data/>} />
                 </Routes>
             </Container>
         </Router>
