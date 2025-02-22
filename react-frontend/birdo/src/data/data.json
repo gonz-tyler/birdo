@@ -1,0 +1,192 @@
+[
+    {
+      "animal": "Lion",
+      "species": "Panthera leo",
+      "location": "Savannah",
+      "quantity": 12,
+      "coordinates": [-1.286389, 36.817223] 
+    },
+    {
+      "animal": "Penguin",
+      "species": "Aptenodytes forsteri",
+      "location": "Antarctica",
+      "quantity": 9,
+      "coordinates": [-64.774598, -64.053316]
+    },
+    {
+      "animal": "Kangaroo",
+      "species": "Macropus rufus",
+      "location": "Australia",
+      "quantity": 13,
+      "coordinates": [-24.776108, 134.755] 
+    },
+    {
+      "animal": "Panda",
+      "species": "Ailuropoda melanoleuca",
+      "location": "China",
+      "quantity": 5,
+      "coordinates": [30.328961, 103.565033]
+    },
+    {
+      "animal": "Elephant",
+      "species": "Loxodonta africana",
+      "location": "Africa",
+      "quantity": 4,
+      "coordinates": [-2.153047, 34.685651]
+    },
+    {
+      "animal": "Polar Bear",
+      "species": "Ursus maritimus",
+      "location": "Arctic",
+      "quantity": 3,
+      "coordinates": [78.2232, 15.6267]
+    },
+    {
+      "animal": "Jaguar",
+      "species": "Panthera onca",
+      "location": "Amazon",
+      "quantity": 8,
+      "coordinates": [-3.4653, -62.2159]
+    },
+    {
+        "animal": "Scottish Wildcat",
+        "species": "Felis silvestris grampia",
+        "location": "Scottish Highlands",
+        "quantity": 14,
+        "coordinates": [57.1200, -4.7100],
+        "conservationStatus": "Critically Endangered"
+      },
+      {
+        "animal": "Red Deer",
+        "species": "Cervus elaphus scoticus",
+        "location": "Cairngorms National Park",
+        "quantity": 15,
+        "coordinates": [57.0800, -3.6700],
+        "conservationStatus": "Least Concern"
+      },
+      {
+        "animal": "Golden Eagle",
+        "species": "Aquila chrysaetos",
+        "location": "Isle of Skye",
+        "quantity": 1,
+        "coordinates": [57.3000, -6.2300],
+        "conservationStatus": "Protected"
+      },
+    
+      {
+        "animal": "Iberian Lynx",
+        "species": "Lynx pardinus",
+        "location": "Doñana National Park",
+        "quantity": 8,
+        "coordinates": [37.0000, -6.5000],
+        "conservationStatus": "Endangered"
+      },
+      {
+        "animal": "Spanish Ibex",
+        "species": "Capra pyrenaica",
+        "location": "Sierra Nevada",
+        "quantity": 4,
+        "coordinates": [37.0500, -3.3100],
+        "conservationStatus": "Vulnerable"
+      },
+      {
+        "animal": "European Mink",
+        "species": "Mustela lutreola",
+        "location": "Northern Spain",
+        "quantity": 12,
+        "coordinates": [43.3000, -3.0000],
+        "conservationStatus": "Critically Endangered"
+      },
+    
+      {
+        "animal": "Axolotl",
+        "species": "Ambystoma mexicanum",
+        "location": "Xochimilco",
+        "quantity": 8,
+        "coordinates": [19.2700, -99.1000],
+        "conservationStatus": "Critically Endangered"
+      },
+      {
+        "animal": "Mexican Wolf",
+        "species": "Canis lupus baileyi",
+        "location": "Sierra Madre Occidental",
+        "quantity": 45,
+        "coordinates": [25.5000, -107.5000],
+        "conservationStatus": "Endangered"
+      },
+      {
+        "animal": "Vaquita Porpoise",
+        "species": "Phocoena sinus",
+        "location": "Gulf of California",
+        "quantity": 10,
+        "coordinates": [30.7500, -114.5000],
+        "conservationStatus": "Critically Endangered"
+      },
+    
+
+      {
+        "animal": "Japanese Macaque",
+        "species": "Macaca fuscata",
+        "location": "Nagano Prefecture",
+        "quantity": 5,
+        "coordinates": [36.6500, 138.1800],
+        "conservationStatus": "Least Concern"
+      },
+      {
+        "animal": "Tanuki",
+        "species": "Nyctereutes procyonoides viverrinus",
+        "location": "Hokkaido",
+        "quantity": 4,
+        "coordinates": [43.4200, 142.8500],
+        "conservationStatus": "Protected"
+      },
+      {
+        "animal": "Iriomote Cat",
+        "species": "Prionailurus bengalensis iriomotensis",
+        "location": "Iriomote Island",
+        "quantity": 10,
+        "coordinates": [24.3333, 123.8333],
+        "conservationStatus": "Critically Endangered"
+      },
+    
+      {
+        "animal": "American Bison",
+        "species": "Bison bison",
+        "location": "Yellowstone National Park",
+        "quantity": 5,
+        "coordinates": [44.4280, -110.5885],
+        "conservationStatus": "Near Threatened"
+      },
+      {
+        "animal": "Florida Panther",
+        "species": "Puma concolor couguar",
+        "location": "Everglades National Park",
+        "quantity": 12,
+        "coordinates": [25.2866, -80.8987],
+        "conservationStatus": "Endangered"
+      },
+      {
+        "animal": "Hawaiian Monk Seal",
+        "species": "Neomonachus schauinslandi",
+        "location": "Northwestern Hawaiian Islands",
+        "quantity": 14,
+        "coordinates": [25.7000, -171.7333],
+        "conservationStatus": "Endangered"
+      },
+      {
+        "animal": "California Condor",
+        "species": "Gymnogyps californianus",
+        "location": "Big Sur",
+        "quantity": 9,
+        "coordinates": [36.2700, -121.8070],
+        "conservationStatus": "Critically Endangered"
+      },
+      {
+        "animal": "American Alligator",
+        "species": "Alligator mississippiensis",
+        "location": "Florida Everglades",
+        "quantity": 5,
+        "coordinates": [25.7743, -80.1937],
+        "conservationStatus": "Least Concern"
+      }
+  ]
