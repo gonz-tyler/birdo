@@ -21,6 +21,7 @@ const ImageUpload = () => {
     const [markerPosition, setMarkerPosition] = useState({ lat: -34.397, lng: 150.644 });
     const [confirmedLocation, setConfirmedLocation] = useState(null);
     const [confirmedCountry, setConfirmedCountry] = useState(null);
+    const [mapKey, setMapKey] = useState(0);
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
@@ -98,6 +99,8 @@ const ImageUpload = () => {
             // Assuming the response is an array of matches, take the first match
             const firstMatch = animalInfoResponse.data[0];
             setAnimalInfo(firstMatch); 
+            setMarkerPosition({ lat: -34.397, lng: 150.644 }); // Reset marker position
+            setMapKey(prevKey => prevKey + 1); // Increment the map key to force re-render
             setLocationDialogOpen(true); // Open the location dialog
         } catch (error) {
             console.error("Error fetching animal info:", error);
@@ -108,16 +111,34 @@ const ImageUpload = () => {
     const handleLocationConfirm = async () => {
         setLocationDialogOpen(false);
         setConfirmedLocation(markerPosition); // Store the confirmed location
+        //setMapKey(prevKey => prevKey + 1); // Increment the map key to force re-render
 
         // Reverse geocode to get the country name
         const geocoder = new window.google.maps.Geocoder();
-        geocoder.geocode({ location: markerPosition }, (results, status) => {
+        geocoder.geocode({ location: markerPosition }, async (results, status) => {
             if (status === "OK" && results[0]) {
                 const country = results[0].address_components.find(component =>
                     component.types.includes("country")
                 );
                 if (country) {
                     setConfirmedCountry(country.long_name);
+
+                    // Save data to backend
+                    const dataToSave = {
+                        animal: correctAnimal || detectedAnimal,
+                        species: animalInfo.name,
+                        location: country.long_name,
+                        quantity: 1, // Example quantity, you can change this
+                        coordinates: [markerPosition.lat, markerPosition.lng]
+                    };
+
+                    try {
+                        await axios.post("http://localhost:5000/save-data", dataToSave);
+                        console.log("Data saved successfully");
+                    } catch (error) {
+                        console.error("Error saving data:", error);
+                        setErrorMessage("Failed to save data. Please try again.");
+                    }
                 }
             } else {
                 console.error("Geocode was not successful for the following reason: " + status);
@@ -240,7 +261,7 @@ const ImageUpload = () => {
             <Dialog open={locationDialogOpen} onClose={() => setLocationDialogOpen(false)} maxWidth="lg" fullWidth>
                 <DialogTitle>Select Location</DialogTitle>
                 <DialogContent>
-                    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+                    <LoadScript key={mapKey} googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
                         <GoogleMap
                             mapContainerStyle={{ height: "400px", width: "100%" }}
                             center={markerPosition}
