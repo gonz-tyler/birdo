@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
-import { Container, Button, Typography, Box, TextField } from '@mui/material';
+import { Container, Button, Typography, Box, TextField } from '@mui.material';
 import Login from "./pages/Login";
 
 const ImageUpload = () => {

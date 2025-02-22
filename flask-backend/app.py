@@ -67,7 +67,9 @@ def login():
     test_user_email = os.getenv("TEST_USER_EMAIL")
     test_user_password = os.getenv("TEST_USER_PASSWORD")
     
-    if email == "user@example.com" and password == "password":
+    print(f"Received login attempt with email: {email} and password: {password}")
+    
+    if email == test_user_email and password == test_user_password:
         session['user'] = email
         return jsonify({"success": True})
     else:
