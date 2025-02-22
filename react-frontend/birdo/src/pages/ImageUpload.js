@@ -73,6 +73,9 @@ const ImageUpload = () => {
 
             // Extract detected animal species
             const species = predictionResponse.data.split(",")[0].replace(/_/g, " ");
+
+            
+
             setDetectedAnimal(species);
             setOpen(true); // Open the dialog to confirm the detected animal
         } catch (error) {
