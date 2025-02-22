@@ -12,6 +12,7 @@ import tensorflow_hub as hub
 import numpy as np
 import requests
 from tf_keras.models import Sequential
+import json
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -169,6 +170,22 @@ def get_animal_info():
         animal_info = {"error": response.status_code, "message": response.text}
     
     return jsonify(animal_info)  # Return animal info
+
+@app.route('/save-data', methods=['POST'])
+def save_data():
+    data = request.get_json()
+    print(data)
+    try:
+        file_path = os.path.join(os.path.dirname(__file__), '../react-frontend/birdo/src/data/data.json')
+        with open(file_path, 'r+') as file:
+            file_data = json.load(file)
+            file_data.append(data)
+            file.seek(0)
+            json.dump(file_data, file, indent=4)
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        print(f"Error saving data: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
 
 @app.route('/health', methods=['GET'])
 def health_check():
