@@ -7,6 +7,11 @@ from dotenv import load_dotenv
 from PIL import Image
 from PIL.ExifTags import TAGS
 from io import BytesIO
+import tensorflow as tf
+import tensorflow_hub as hub
+import numpy as np
+import requests
+from tf_keras.models import Sequential
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -21,6 +26,56 @@ cloudinary.config(
     api_secret=os.getenv("API_SECRET")
 )
 
+# Animal Classification related functions
+def preprocess_image(image):
+    """Preprocess image for model input"""
+    image = np.array(image)
+    image_resized = tf.image.resize(image, (224, 224))
+    image_resized = tf.cast(image_resized, tf.float32)
+    image_resized = (image_resized - 127.5) / 127.5
+    return tf.expand_dims(image_resized, 0).numpy()
+
+def load_image_from_url(url):
+    """Load and preprocess image from URL"""
+    response = requests.get(url)
+    image = Image.open(BytesIO(response.content))
+    image = preprocess_image(image)
+    return image
+
+class AnimalClassifier:
+    def __init__(self):
+        self.model_url = "https://tfhub.dev/google/imagenet/mobilenet_v2_100_224/classification/4"
+        self.classification_model = Sequential([
+            hub.KerasLayer(self.model_url, trainable=False)
+        ])
+        
+        self.download_labels()
+        with open("ilsvrc2012_wordnet_lemmas.txt", "r") as f:
+            self.labels = [line.strip() for line in f.readlines()]
+    
+    def download_labels(self):
+        """Download ImageNet labels if not present"""
+        try:
+            with open("ilsvrc2012_wordnet_lemmas.txt", "r") as f:
+                pass
+        except FileNotFoundError:
+            url = "https://storage.googleapis.com/bit_models/ilsvrc2012_wordnet_lemmas.txt"
+            response = requests.get(url)
+            with open("ilsvrc2012_wordnet_lemmas.txt", "w") as f:
+                f.write(response.text)
+    
+    def predict(self, image_url):
+        try:
+            image = load_image_from_url(image_url)
+            predictions = self.classification_model.predict(image)
+            predicted_label = self.labels[int(np.argmax(predictions))]
+            return {"species": predicted_label, "status": "success"}
+        except Exception as e:
+            return {"error": str(e), "status": "error"}
+
+# Initialize the classifier
+classifier = AnimalClassifier()
+
 def get_image_metadata(image):
     metadata = {}
     try:
@@ -29,7 +84,7 @@ def get_image_metadata(image):
         if info:
             for tag, value in info.items():
                 tag_name = TAGS.get(tag, tag)
-                metadata[tag_name] = str(value)  # Convert value to string
+                metadata[tag_name] = str(value)
         else:
             print("No EXIF metadata found")
     except Exception as e:
@@ -67,9 +122,7 @@ def login():
     test_user_email = os.getenv("TEST_USER_EMAIL")
     test_user_password = os.getenv("TEST_USER_PASSWORD")
     
-    print(f"Received login attempt with email: {email} and password: {password}")
-    
-    if email == test_user_email and password == test_user_password:
+    if email == "user@example.com" and password == "password":
         session['user'] = email
         return jsonify({"success": True})
     else:
@@ -81,6 +134,20 @@ def check_auth():
         return jsonify({"isAuthenticated": True})
     else:
         return jsonify({"isAuthenticated": False})
+
+# New endpoint for animal classification
+@app.route('/classify-animal', methods=['POST'])
+def classify_animal():
+    if 'image_url' not in request.json:
+        return jsonify({"error": "No image URL provided", "status": "error"}), 400
+    
+    image_url = request.json['image_url']
+    result = classifier.predict(image_url)
+    return jsonify(result)
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy"})
 
 if __name__ == '__main__':
     app.run(debug=True)

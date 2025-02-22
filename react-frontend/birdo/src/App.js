@@ -37,6 +37,10 @@ const ImageUpload = () => {
             setMetadata(response.data.metadata);
             setSuccessMessage("Image uploaded successfully!");
             setErrorMessage("");
+            const predictionResponse = await axios.post("http://localhost:5000/classify-animal", {
+                image_url: uploadedImageUrl
+            });
+            setAiResult(predictionResponse.data);
         } catch (error) {
             console.error("Error uploading file:", error);
             setErrorMessage("Failed to upload image. Please try again.");
