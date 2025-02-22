@@ -5,6 +5,7 @@ import { Container, Button, Typography, Box, TextField } from '@mui/material';
 const ImageUpload = () => {
     const [file, setFile] = useState(null);
     const [aiResult, setAiResult] = useState(null);
+    const [animalInfo, setAnimalInfo] = useState(null);
     const [preview, setPreview] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [successMessage, setSuccessMessage] = useState("");
@@ -39,6 +40,19 @@ const ImageUpload = () => {
                 image_url: uploadedImageUrl
             });
             setAiResult(predictionResponse.data)
+
+            // Fetch animal info based on species
+            const species = predictionResponse.data.split(",")[0].replace(/_/g, " ");
+            // Hardcoded checks for specific species
+            const adjustedSpecies = species === "grey fox" ? "gray fox" : species === "African elephant" ? "African Bush elephant" : species;
+            console.log(adjustedSpecies)
+
+            // Fetch animal info based on adjusted species
+            const animalInfoResponse = await axios.post("http://localhost:5000/animal-info", {
+                species: adjustedSpecies
+            });
+            
+            setAnimalInfo(animalInfoResponse.data); 
         } catch (error) {
             console.error("Error uploading file:", error);
             setErrorMessage("Failed to upload image. Please try again.");
@@ -71,6 +85,12 @@ const ImageUpload = () => {
                 <Box mt={2}>
                     <Typography variant="h6">AI Result:</Typography>
                     <pre>{JSON.stringify(aiResult, null, 2)}</pre>
+                </Box>
+            )}
+            {animalInfo && ( // Display animal info if available
+                <Box mt={2}>
+                    <Typography variant="h6">Animal Information:</Typography>
+                    <pre>{JSON.stringify(animalInfo, null, 2)}</pre>
                 </Box>
             )}
         </Container>

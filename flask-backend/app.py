@@ -26,6 +26,8 @@ cloudinary.config(
     api_secret=os.getenv("API_SECRET")
 )
 
+api_key = os.environ.get("API_KEY2")
+
 # Animal Classification related functions
 def preprocess_image(image):
     """Preprocess image for model input"""
@@ -150,6 +152,23 @@ def classify_animal():
     species = result.get("species", "Unknown")
     
     return species  # Return only the species
+
+@app.route('/animal-info', methods=['POST'])
+def get_animal_info():
+    if 'species' not in request.json:
+        return jsonify({"error": "No species name provided", "status": "error"}), 400
+    
+    species = request.json['species']
+    api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(species)
+    
+    response = requests.get(api_url, headers={'X-Api-Key': api_key})
+    
+    if response.status_code == requests.codes.ok:
+        animal_info = response.json()  # Get the JSON response from the API
+    else:
+        animal_info = {"error": response.status_code, "message": response.text}
+    
+    return jsonify(animal_info)  # Return animal info
 
 @app.route('/health', methods=['GET'])
 def health_check():
