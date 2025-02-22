@@ -29,6 +29,7 @@ cloudinary.config(
 # Animal Classification related functions
 def preprocess_image(image):
     """Preprocess image for model input"""
+    image = image.convert("RGB")  # Ensure image is RGB
     image = np.array(image)
     image_resized = tf.image.resize(image, (224, 224))
     image_resized = tf.cast(image_resized, tf.float32)
@@ -38,9 +39,10 @@ def preprocess_image(image):
 def load_image_from_url(url):
     """Load and preprocess image from URL"""
     response = requests.get(url)
-    image = Image.open(BytesIO(response.content))
+    image = Image.open(BytesIO(response.content)).convert("RGB")  # Convert to RGB
     image = preprocess_image(image)
     return image
+
 
 class AnimalClassifier:
     def __init__(self):
@@ -143,7 +145,11 @@ def classify_animal():
     
     image_url = request.json['image_url']
     result = classifier.predict(image_url)
-    return jsonify(result)
+
+    # Extract only the species field
+    species = result.get("species", "Unknown")
+    
+    return species  # Return only the species
 
 @app.route('/health', methods=['GET'])
 def health_check():
