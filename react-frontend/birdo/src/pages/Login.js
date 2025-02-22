@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { Container, Button, Typography, TextField, Box } from '@mui/material';
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import useAuthNavigation from "../hooks/useAuthNavigation";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const navigate = useNavigate();
+    const { loginAndNavigate } = useAuthNavigation();
 
     const handleLogin = async () => {
         try {
             const response = await axios.post("http://localhost:5000/login", { email, password });
             if (response.data.success) {
-                localStorage.setItem("isAuthenticated", "true");
-                navigate("/");
+                loginAndNavigate({ email });
             } else {
                 setErrorMessage("Invalid email or password");
             }
