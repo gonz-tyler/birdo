@@ -13,6 +13,7 @@ import numpy as np
 import requests
 from tf_keras.models import Sequential
 import json
+import openai
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -190,6 +191,54 @@ def save_data():
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "healthy"})
+
+@app.route('/get-insights', methods=['POST'])
+def get_insights():
+    try:
+        data = request.get_json()
+        species = data.get('species')
+        
+        if not species:
+            return jsonify({"error": "Species parameter is required"}), 400
+
+        prompt = f"""Given the following data on wildlife sightings for {species}, provide actionable insights that can help users make informed decisions. The insights should include:
+1. Population Trend: Analyze population changes
+2. Migration Pattern: Describe observed movement patterns
+3. Human Impact Alert: Identify human-related threats
+4. Optimal Spotting Times/Locations: Recommend best observation opportunities
+
+Format the response EXACTLY like this example (keep the section headers verbatim):
+
+Population Trend:
+"The population of [species] has declined by 15% in the past month in [region], suggesting potential threats or habitat disruption. Further investigation is needed to identify underlying causes."
+
+Migration Pattern:
+"Recent sightings show that [species] is migrating northward, with the last sighting at coordinates [coordinates]. It is expected to arrive in [new region] within the next week."
+
+Human Impact Alert:
+"Increased sightings of [species] near urban areas indicate possible habitat disturbance. Conservation efforts may need to focus on protecting these critical areas."
+
+Optimal Spotting Times/Locations:
+"Most sightings of [species] occur at 6 AM near water sources in [region]. Plan your observation trips accordingly for the best chances of spotting them."""""
+
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+        
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a wildlife conservation expert providing concise, factual insights."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3,
+            max_tokens=400
+        )
+
+        insights = response.choices[0].message.content.strip()
+        return insights, 200  # Return raw text as the frontend expects
+
+    except Exception as e:
+        print(f"OpenAI API Error: {e}")
+        return jsonify({"error": "Failed to generate insights"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -272,28 +272,18 @@
         "location": "Australia",
         "quantity": 1,
         "coordinates": [
-            -35.300841337931594,
-            149.1553525390625
-        ]
-    },
-    {
-        "animal": "red panda",
-        "species": "Red Panda",
-        "location": "Australia",
-        "quantity": 1,
-        "coordinates": [
             -36.93827224384006,
             139.82283486701613
         ]
     },
     {
-        "animal": "giant panda",
-        "species": "Giant Panda Bear",
-        "location": "Papua New Guinea",
+        "animal": "snow leopard",
+        "species": "Snow Leopard",
+        "location": "Nepal",
         "quantity": 1,
         "coordinates": [
-            -6.573234097568947,
-            143.6307308673036
+            27.82588383007857,
+            82.60225961095982
         ]
     },
     {

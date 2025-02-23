@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Container, Button, Typography, Box, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardContent, Grid, LinearProgress } from '@mui/material';
+import { Container, Button, Typography, Box, TextField, Dialog, DialogActions, Alert, DialogContent, DialogContentText, DialogTitle, Card, CardContent, Grid, LinearProgress } from '@mui/material';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 
 const ImageUpload = () => {
@@ -22,6 +22,8 @@ const ImageUpload = () => {
     const [confirmedLocation, setConfirmedLocation] = useState(null);
     const [confirmedCountry, setConfirmedCountry] = useState(null);
     const [mapKey, setMapKey] = useState(0);
+    const [insights, setInsights] = useState(null);
+    const [insightsLoading, setInsightsLoading] = useState(false);
 
 
     const { isLoaded } = useLoadScript({
@@ -158,6 +160,36 @@ const ImageUpload = () => {
         setMarkerPosition({ lat: event.latLng.lat(), lng: event.latLng.lng() });
     };
 
+    const handleGetInsights = async () => {
+        if (!animalInfo?.name) return;
+        
+        setInsightsLoading(true);
+        try {
+            const response = await axios.post("http://localhost:5000/get-insights", {
+                species: animalInfo.name
+            });
+            
+            // Split the response into sections
+            const sections = response.data.split('\n\n');
+            const parsedInsights = {};
+            
+            sections.forEach(section => {
+                const [title, content] = section.split(':\n');
+                if (title && content) {
+                    parsedInsights[title.trim()] = content.replace(/"/g, '').trim();
+                }
+            });
+            
+            setInsights(parsedInsights);
+            setErrorMessage("");
+        } catch (error) {
+            console.error("Error fetching insights:", error);
+            setErrorMessage("Failed to fetch insights. Please try again.");
+        } finally {
+            setInsightsLoading(false);
+        }
+    };
+
     const handleCancel = () => {
         setOpen(false);
     };
@@ -219,6 +251,39 @@ const ImageUpload = () => {
         );
     };
 
+    const renderInsights = () => {
+        if (!insights) return null;
+        
+        const insightSections = [
+            "Population Trend",
+            "Migration Pattern",
+            "Human Impact Alert",
+            "Optimal Spotting Times/Locations"
+        ];
+
+        return (
+            <Box mt={4}>
+                <Typography variant="h5" gutterBottom>Conservation Insights</Typography>
+                <Grid container spacing={3}>
+                    {insightSections.map((section) => (
+                        <Grid item xs={12} md={6} key={section}>
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <Typography variant="h6" color="primary" gutterBottom>
+                                        {section}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {insights[section] || "No information available"}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
+        );
+    };
+
     return (
         <Container>
             <Typography variant="h4" gutterBottom>Upload an Image</Typography>
@@ -237,6 +302,22 @@ const ImageUpload = () => {
             {successMessage && <Typography color="success.main">{successMessage}</Typography>}
             {errorMessage && <Typography color="error.main">{errorMessage}</Typography>}
             {renderAnimalInfo(animalInfo)}
+
+            {animalInfo && (
+                <Box mt={3} mb={4}>
+                    <Button 
+                        variant="contained" 
+                        color="secondary" 
+                        onClick={handleGetInsights}
+                        disabled={insightsLoading}
+                    >
+                        {insightsLoading ? "Generating Insights..." : "Get Conservation Insights"}
+                    </Button>
+                    {insightsLoading && <LinearProgress sx={{ mt: 1 }} />}
+                </Box>
+            )}
+            
+            {insights && renderInsights()}
 
             <Dialog open={open} onClose={handleCancel}>
                 <DialogTitle>Confirm Detected Animal</DialogTitle>
