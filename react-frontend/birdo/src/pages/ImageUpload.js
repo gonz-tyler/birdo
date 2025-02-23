@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
-import { Container, Button, Typography, Box, TextField, Dialog, DialogActions, Alert, DialogContent, DialogContentText, DialogTitle, Card, CardContent, Grid, LinearProgress } from '@mui/material';
+import { Container, Button, Typography, Box, TextField, Dialog, DialogActions, Alert, DialogContent, DialogContentText, DialogTitle, Card, CardContent, Grid, LinearProgress, useTheme } from '@mui/material';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+import { motion } from "framer-motion";
+import { Spa, CloudUpload } from '@mui/icons-material';
 
 const ImageUpload = () => {
     const [file, setFile] = useState(null);
@@ -25,7 +27,8 @@ const ImageUpload = () => {
     const [insights, setInsights] = useState(null);
     const [insightsLoading, setInsightsLoading] = useState(false);
 
-
+    const theme = useTheme();
+    const fileInputRef = useRef(null);
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
     });
@@ -47,6 +50,30 @@ const ImageUpload = () => {
         setShowInput(false);
         setConfirmedLocation(null);
         setConfirmedCountry(null);
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+        const selectedFile = event.dataTransfer.files[0];
+        setFile(selectedFile);
+        setPreview(URL.createObjectURL(selectedFile));
+
+        // Reset state variables for new file selection
+        setAiResult(null);
+        setAnimalInfo(null);
+        setImageUrl(null);
+        setSuccessMessage("");
+        setErrorMessage("");
+        setMetadata(null);
+        setDetectedAnimal("");
+        setCorrectAnimal("");
+        setShowInput(false);
+        setConfirmedLocation(null);
+        setConfirmedCountry(null);
+    };
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
     };
 
     const handleUpload = async () => {
@@ -82,8 +109,6 @@ const ImageUpload = () => {
             // Extract detected animal species
             const species = predictionResponse.data.split(",")[0].replace(/_/g, " ");
 
-            
-
             setDetectedAnimal(species);
             setOpen(true); // Open the dialog to confirm the detected animal
         } catch (error) {
@@ -118,7 +143,6 @@ const ImageUpload = () => {
     const handleLocationConfirm = async () => {
         setLocationDialogOpen(false);
         setConfirmedLocation(markerPosition); // Store the confirmed location
-        //setMapKey(prevKey => prevKey + 1); // Increment the map key to force re-render
 
         // Reverse geocode to get the country name
         const geocoder = new window.google.maps.Geocoder();
@@ -285,87 +309,226 @@ const ImageUpload = () => {
     };
 
     return (
-        <Container>
-            <Typography variant="h4" gutterBottom>Upload an Image</Typography>
-            <TextField type="file" onChange={handleFileChange} fullWidth margin="normal" />
-            {preview && <Box component="img" src={preview} alt="Preview" width="200px" />}
-            {confirmedLocation && (
-                <Box mt={2}>
-                    <Typography variant="h6">Confirmed Location</Typography>
-                    <Typography variant="body1">Latitude: {confirmedLocation.lat}</Typography>
-                    <Typography variant="body1">Longitude: {confirmedLocation.lng}</Typography>
-                    {confirmedCountry && <Typography variant="body1">Country: {confirmedCountry}</Typography>}
-                </Box>
-            )}
-            <Button variant="contained" color="primary" onClick={handleUpload}>Upload</Button>
-            {loading && <LinearProgress />}
-            {successMessage && <Typography color="success.main">{successMessage}</Typography>}
-            {errorMessage && <Typography color="error.main">{errorMessage}</Typography>}
-            {renderAnimalInfo(animalInfo)}
-
-            {animalInfo && (
-                <Box mt={3} mb={4}>
-                    <Button 
-                        variant="contained" 
-                        color="secondary" 
-                        onClick={handleGetInsights}
-                        disabled={insightsLoading}
+        <Box
+            sx={{
+                minHeight: '100vh',
+                background: 'linear-gradient(to bottom right, #e8f5e9, #c8e6c9)',
+                py: 8,
+                position: 'relative',
+                overflow: 'hidden'
+            }}
+        >
+            {/* Animated floating leaves */}
+            <Box sx={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
+                {[1, 2, 3, 4, 5].map((i) => (
+                    <motion.div
+                        key={i}
+                        style={{
+                            position: 'absolute',
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`
+                        }}
+                        animate={{
+                            y: [0, -100, 0],
+                            rotate: [0, 360],
+                        }}
+                        transition={{
+                            duration: 15 + Math.random() * 10,
+                            repeat: Infinity,
+                            ease: "linear"
+                        }}
                     >
-                        {insightsLoading ? "Generating Insights..." : "Get Conservation Insights"}
-                    </Button>
-                    {insightsLoading && <LinearProgress sx={{ mt: 1 }} />}
-                </Box>
-            )}
-            
-            {insights && renderInsights()}
+                        <Spa sx={{ fontSize: 40, color: '#2e7d32', opacity: 0.3 }} />
+                    </motion.div>
+                ))}
+            </Box>
 
-            <Dialog open={open} onClose={handleCancel}>
-                <DialogTitle>Confirm Detected Animal</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Is the detected animal "{detectedAnimal}" correct?
-                    </DialogContentText>
-                    {showInput && (
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            label="Correct Animal"
-                            type="text"
-                            fullWidth
-                            value={correctAnimal}
-                            onChange={(e) => setCorrectAnimal(e.target.value)}
-                        />
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCancel} color="primary">Cancel</Button>
-                    <Button onClick={handleNo} color="primary">No</Button>
-                    <Button onClick={handleConfirm} color="primary">Yes</Button>
-                </DialogActions>
-            </Dialog>
+            <Container>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <Card
+                        sx={{
+                            p: 4,
+                            borderRadius: 4,
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                            background: 'rgba(255, 255, 255, 0.9)',
+                            backdropFilter: 'blur(10px)',
+                            position: 'relative',
+                            overflow: 'visible'
+                        }}
+                    >
+                        <Box sx={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)' }}>
+                            <Spa sx={{ fontSize: 80, color: '#2e7d32' }} />
+                        </Box>
 
-            <Dialog open={locationDialogOpen} onClose={() => setLocationDialogOpen(false)} maxWidth="lg" fullWidth>
-                <DialogTitle>Select Location</DialogTitle>
-                <DialogContent>
-                {isLoaded ? (
-                        <GoogleMap
-                            mapContainerStyle={{ height: "400px", width: "100%" }}
-                            center={markerPosition}
-                            zoom={8}
-                            onClick={handleMapClick}
+                        <Typography
+                            variant="h2"
+                            sx={{
+                                mt: 4,
+                                fontWeight: 800,
+                                color: '#1b5e20',
+                                textAlign: 'center',
+                                position: 'relative',
+                                '&:after': {
+                                    content: '""',
+                                    display: 'block',
+                                    width: 100,
+                                    height: 4,
+                                    backgroundColor: theme.palette.success.main,
+                                    margin: '20px auto',
+                                    borderRadius: 2
+                                }
+                            }}
                         >
-                            <Marker position={markerPosition} />
-                        </GoogleMap>
-                    ) : (
-                        <div>Loading map...</div>
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setLocationDialogOpen(false)} color="primary">Cancel</Button>
-                    <Button onClick={handleLocationConfirm} color="primary">Confirm</Button>
-                </DialogActions>
-            </Dialog>
-        </Container>
+                            Upload an Image
+                        </Typography>
+
+                        <Box mt={4}>
+                            <Box
+                                onDrop={handleDrop}
+                                onDragOver={handleDragOver}
+                                onClick={() => fileInputRef.current.click()}
+                                sx={{
+                                    border: '2px dashed #2e7d32',
+                                    borderRadius: 2,
+                                    padding: 3,
+                                    cursor: 'pointer',
+                                    textAlign: 'center',
+                                    backgroundColor: '#f1f8e9',
+                                    '&:hover': { backgroundColor: '#e8f5e9' }
+                                }}
+                            >
+                                <CloudUpload sx={{ fontSize: 50, color: '#2e7d32' }} />
+                                <Typography variant="body1" sx={{ mt: 1 }}>
+                                    Drag & Drop an image here or click to select a file
+                                </Typography>
+                                <input 
+                                    type="file" 
+                                    ref={fileInputRef} 
+                                    onChange={handleFileChange} 
+                                    style={{ display: 'none' }}
+                                />
+                            </Box>
+                            {preview && (
+                                <Box 
+                                    component="img" 
+                                    src={preview} 
+                                    alt="Preview" 
+                                    sx={{ 
+                                        width: '100%', 
+                                        maxWidth: '300px', 
+                                        borderRadius: 2, 
+                                        mb: 2 
+                                    }} 
+                                />
+                            )}
+                            <Button 
+                                variant="contained" 
+                                color="success" 
+                                onClick={handleUpload}
+                                sx={{
+                                    borderRadius: 50,
+                                    px: 6,
+                                    py: 1.5,
+                                    fontSize: '1.2rem',
+                                    textTransform: 'none',
+                                    boxShadow: theme.shadows[4]
+                                }}
+                            >
+                                Upload
+                            </Button>
+                            {loading && <LinearProgress sx={{ mt: 2 }} />}
+                            {successMessage && (
+                                <Typography color="success.main" sx={{ mt: 2 }}>
+                                    {successMessage}
+                                </Typography>
+                            )}
+                            {errorMessage && (
+                                <Typography color="error.main" sx={{ mt: 2 }}>
+                                    {errorMessage}
+                                </Typography>
+                            )}
+                        </Box>
+
+                        {renderAnimalInfo(animalInfo)}
+
+                        {animalInfo && (
+                            <Box mt={3} mb={4}>
+                                <Button 
+                                    variant="contained" 
+                                    color="secondary" 
+                                    onClick={handleGetInsights}
+                                    disabled={insightsLoading}
+                                    sx={{
+                                        borderRadius: 50,
+                                        px: 6,
+                                        py: 1.5,
+                                        fontSize: '1.2rem',
+                                        textTransform: 'none',
+                                        boxShadow: theme.shadows[4]
+                                    }}
+                                >
+                                    {insightsLoading ? "Generating Insights..." : "Get Conservation Insights"}
+                                </Button>
+                                {insightsLoading && <LinearProgress sx={{ mt: 1 }} />}
+                            </Box>
+                        )}
+                        
+                        {insights && renderInsights()}
+
+                        <Dialog open={open} onClose={handleCancel}>
+                            <DialogTitle>Confirm Detected Animal</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Is the detected animal "{detectedAnimal}" correct?
+                                </DialogContentText>
+                                {showInput && (
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        label="Correct Animal"
+                                        type="text"
+                                        fullWidth
+                                        value={correctAnimal}
+                                        onChange={(e) => setCorrectAnimal(e.target.value)}
+                                    />
+                                )}
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCancel} color="primary">Cancel</Button>
+                                <Button onClick={handleNo} color="primary">No</Button>
+                                <Button onClick={handleConfirm} color="primary">Yes</Button>
+                            </DialogActions>
+                        </Dialog>
+
+                        <Dialog open={locationDialogOpen} onClose={() => setLocationDialogOpen(false)} maxWidth="lg" fullWidth>
+                            <DialogTitle>Select Location</DialogTitle>
+                            <DialogContent>
+                            {isLoaded ? (
+                                    <GoogleMap
+                                        mapContainerStyle={{ height: "400px", width: "100%" }}
+                                        center={markerPosition}
+                                        zoom={8}
+                                        onClick={handleMapClick}
+                                    >
+                                        <Marker position={markerPosition} />
+                                    </GoogleMap>
+                                ) : (
+                                    <div>Loading map...</div>
+                                )}
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => setLocationDialogOpen(false)} color="primary">Cancel</Button>
+                                <Button onClick={handleLocationConfirm} color="primary">Confirm</Button>
+                            </DialogActions>
+                        </Dialog>
+                    </Card>
+                </motion.div>
+            </Container>
+        </Box>
     );
 };
 

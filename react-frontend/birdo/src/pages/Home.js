@@ -3,6 +3,7 @@ import { Container, Button, Typography, Card, Box, Grid } from '@mui/material';
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Spa, Grass, Park } from '@mui/icons-material';
+import illustration from "../images/home_illustration-removebg-preview.png"; // Make sure to replace this with the actual path to your illustration
 
 const Home = () => (
   <Box
@@ -12,6 +13,30 @@ const Home = () => (
       py: 8
     }}
   >
+    {/* Animated floating leaves */}
+    <Box sx={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <motion.div
+          key={i}
+          style={{
+            position: 'absolute',
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`
+          }}
+          animate={{
+            y: [0, -100, 0],
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: 15 + Math.random() * 10,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        >
+          <Spa sx={{ fontSize: 40, color: '#2e7d32', opacity: 0.3 }} />
+        </motion.div>
+      ))}
+    </Box>
     <Container>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -31,6 +56,10 @@ const Home = () => (
         >
           <Box sx={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)' }}>
             <Spa sx={{ fontSize: 80, color: '#2e7d32' }} />
+          </Box>
+
+          <Box sx={{ textAlign: 'center', mt: 4 }}>
+            <img src={illustration} alt="Illustration" style={{ maxWidth: '100%', height: '300px' }} />
           </Box>
 
           <Typography 
