@@ -295,5 +295,15 @@
             -6.573234097568947,
             143.6307308673036
         ]
+    },
+    {
+        "animal": "red panda",
+        "species": "Red Panda",
+        "location": "Australia",
+        "quantity": 1,
+        "coordinates": [
+            -34.68299827442257,
+            138.52512938290582
+        ]
     }
 ]
