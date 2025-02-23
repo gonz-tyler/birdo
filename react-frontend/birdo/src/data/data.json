@@ -275,5 +275,55 @@
             -35.300841337931594,
             149.1553525390625
         ]
+    },
+    {
+        "animal": "snow leopard",
+        "species": "Snow Leopard",
+        "location": "Australia",
+        "quantity": 1,
+        "coordinates": [
+            -26.868224114725223,
+            152.49075083369692
+        ]
+    },
+    {
+        "animal": "African elephant",
+        "species": "African Bush Elephant",
+        "location": "Chad",
+        "quantity": 1,
+        "coordinates": [
+            13.224542432514891,
+            18.64533741120526
+        ]
+    },
+    {
+        "animal": "snow leopard",
+        "species": "Snow Leopard",
+        "location": "Australia",
+        "quantity": 1,
+        "coordinates": [
+            -32.90376983740806,
+            146.54422832058899
+        ]
+    },
+    {
+        "animal": "African elephant",
+        "species": "African Bush Elephant",
+        "location": "Australia",
+        "quantity": 1,
+        "coordinates": [
+            -35.29747885136548,
+            145.24421964274347
+        ]
+    },
+    {
+        "animal": "grey fox",
+        "species": "Gray Fox",
+        "location": "Indonesia",
+        "quantity": 1,
+        "coordinates": [
+            -0.10657139048060073,
+            115.59597388519258
+        ]
     }
 ]

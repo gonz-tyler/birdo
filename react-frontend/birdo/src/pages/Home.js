@@ -51,7 +51,7 @@ const Home = () => (
               }
             }}
           >
-            Green Future Initiative
+            Birdo
           </Typography>
 
           <Typography 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Container, Button, Typography, Box, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardContent, Grid, LinearProgress } from '@mui/material';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 
 const ImageUpload = () => {
     const [file, setFile] = useState(null);
@@ -22,6 +22,11 @@ const ImageUpload = () => {
     const [confirmedLocation, setConfirmedLocation] = useState(null);
     const [confirmedCountry, setConfirmedCountry] = useState(null);
     const [mapKey, setMapKey] = useState(0);
+
+
+    const { isLoaded } = useLoadScript({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+    });
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
@@ -92,15 +97,15 @@ const ImageUpload = () => {
         try {
             const species = showInput ? correctAnimal : detectedAnimal;
             // Fetch animal info based on species
+            const adjustedSpecies = species === "grey fox" ? "gray fox" : species === "African elephant" ? "elephant" : species;
             const animalInfoResponse = await axios.post("http://localhost:5000/animal-info", {
-                species: species
+                species: adjustedSpecies
             });
             
             // Assuming the response is an array of matches, take the first match
             const firstMatch = animalInfoResponse.data[0];
             setAnimalInfo(firstMatch); 
             setMarkerPosition({ lat: -34.397, lng: 150.644 }); // Reset marker position
-            setMapKey(prevKey => prevKey + 1); // Increment the map key to force re-render
             setLocationDialogOpen(true); // Open the location dialog
         } catch (error) {
             console.error("Error fetching animal info:", error);
@@ -261,7 +266,7 @@ const ImageUpload = () => {
             <Dialog open={locationDialogOpen} onClose={() => setLocationDialogOpen(false)} maxWidth="lg" fullWidth>
                 <DialogTitle>Select Location</DialogTitle>
                 <DialogContent>
-                    <LoadScript key={mapKey} googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+                {isLoaded ? (
                         <GoogleMap
                             mapContainerStyle={{ height: "400px", width: "100%" }}
                             center={markerPosition}
@@ -270,7 +275,9 @@ const ImageUpload = () => {
                         >
                             <Marker position={markerPosition} />
                         </GoogleMap>
-                    </LoadScript>
+                    ) : (
+                        <div>Loading map...</div>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setLocationDialogOpen(false)} color="primary">Cancel</Button>
