@@ -4,7 +4,7 @@ import animalsData from '../data/data.json';
 import AnimalsMap from '../components/AnimalMap';
 import { Box, Card, Typography } from '@mui/material';
 import { motion } from "framer-motion";
-import { Spa, Nature, Upload, Analytics, Grass } from '@mui/icons-material';
+import { Spa } from '@mui/icons-material';
 
 const AnimalsChart = () => {
   // Custom color palette
@@ -19,6 +19,8 @@ const AnimalsChart = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
       {/* Animated floating leaves */}
@@ -55,8 +57,13 @@ const AnimalsChart = () => {
           maxWidth: 900,
           width: '90%',
           textAlign: 'center',
+          position: 'relative',
+          overflow: 'visible'
         }}
       >
+        <Box sx={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)' }}>
+          <Spa sx={{ fontSize: 80, color: '#2e7d32' }} />
+        </Box>
         <Typography 
           variant="h3" 
           gutterBottom 

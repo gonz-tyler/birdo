@@ -257,43 +257,80 @@
         "conservationStatus": "Least Concern"
     },
     {
-        "animal": "giant panda",
-        "species": "Red Panda",
-        "location": "Australia",
-        "quantity": 1,
+        "animal": "Manatee",
+        "species": "Trichechus manatus",
+        "location": "Crystal River",
+        "quantity": 7,
         "coordinates": [
-            -33.86158315617131,
-            151.21254248046876
-        ]
+            28.9025,
+            -82.5925
+        ],
+        "conservationStatus": "Vulnerable"
     },
     {
-        "animal": "red panda",
-        "species": "Red Panda",
-        "location": "Australia",
-        "quantity": 1,
+        "animal": "Bald Eagle",
+        "species": "Haliaeetus leucocephalus",
+        "location": "Alaska",
+        "quantity": 3,
         "coordinates": [
-            -36.93827224384006,
-            139.82283486701613
-        ]
+            61.0167,
+            -149.8
+        ],
+        "conservationStatus": "Least Concern"
     },
     {
-        "animal": "snow leopard",
-        "species": "Snow Leopard",
-        "location": "Nepal",
-        "quantity": 1,
+        "animal": "American Black Bear",
+        "species": "Ursus americanus",
+        "location": "Great Smoky Mountains",
+        "quantity": 6,
         "coordinates": [
-            27.82588383007857,
-            82.60225961095982
-        ]
+            35.6,
+            -83.4
+        ],
+        "conservationStatus": "Least Concern"
     },
     {
-        "animal": "red panda",
-        "species": "Red Panda",
-        "location": "Australia",
-        "quantity": 1,
+        "animal": "Red Wolf",
+        "species": "Canis rufus",
+        "location": "Alligator River National Wildlife Refuge",
+        "quantity": 9,
         "coordinates": [
-            -34.68299827442257,
-            138.52512938290582
-        ]
+            35.9,
+            -76.2
+        ],
+        "conservationStatus": "Critically Endangered"
+    },
+    {
+        "animal": "Carolina Northern Flying Squirrel",
+        "species": "Glaucomys sabrinus coloratus",
+        "location": "Appalachian Mountains",
+        "quantity": 12,
+        "coordinates": [
+            35.6,
+            -83.4
+        ],
+        "conservationStatus": "Endangered"
+    },
+    {
+        "animal": "Red-Cockaded Woodpecker",
+        "species": "Leuconotopicus borealis",
+        "location": "Longleaf Pine Forests",
+        "quantity": 8,
+        "coordinates": [
+            31.0,
+            -83.0
+        ],
+        "conservationStatus": "Endangered"
+    },
+    {
+        "animal": "Whooping Crane",
+        "species": "Grus americana",
+        "location": "Aransas National Wildlife Refuge",
+        "quantity": 5,
+        "coordinates": [
+            28.3,
+            -96.8
+        ],
+        "conservationStatus": "Endangered"
     }
 ]
