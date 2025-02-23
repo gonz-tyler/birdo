@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import { Container, Button, Typography, Box, TextField, Dialog, DialogActions, Alert, DialogContent, DialogContentText, DialogTitle, Card, CardContent, Grid, LinearProgress, useTheme } from '@mui/material';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 import { motion } from "framer-motion";
-import { Spa } from '@mui/icons-material';
+import { Spa, CloudUpload } from '@mui/icons-material';
 
 const ImageUpload = () => {
     const [file, setFile] = useState(null);
@@ -28,6 +28,7 @@ const ImageUpload = () => {
     const [insightsLoading, setInsightsLoading] = useState(false);
 
     const theme = useTheme();
+    const fileInputRef = useRef(null);
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
     });
@@ -49,6 +50,30 @@ const ImageUpload = () => {
         setShowInput(false);
         setConfirmedLocation(null);
         setConfirmedCountry(null);
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+        const selectedFile = event.dataTransfer.files[0];
+        setFile(selectedFile);
+        setPreview(URL.createObjectURL(selectedFile));
+
+        // Reset state variables for new file selection
+        setAiResult(null);
+        setAnimalInfo(null);
+        setImageUrl(null);
+        setSuccessMessage("");
+        setErrorMessage("");
+        setMetadata(null);
+        setDetectedAnimal("");
+        setCorrectAnimal("");
+        setShowInput(false);
+        setConfirmedLocation(null);
+        setConfirmedCountry(null);
+    };
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
     };
 
     const handleUpload = async () => {
@@ -362,13 +387,31 @@ const ImageUpload = () => {
                         </Typography>
 
                         <Box mt={4}>
-                            <TextField 
-                                type="file" 
-                                onChange={handleFileChange} 
-                                fullWidth 
-                                margin="normal" 
-                                sx={{ mb: 2 }}
-                            />
+                            <Box
+                                onDrop={handleDrop}
+                                onDragOver={handleDragOver}
+                                onClick={() => fileInputRef.current.click()}
+                                sx={{
+                                    border: '2px dashed #2e7d32',
+                                    borderRadius: 2,
+                                    padding: 3,
+                                    cursor: 'pointer',
+                                    textAlign: 'center',
+                                    backgroundColor: '#f1f8e9',
+                                    '&:hover': { backgroundColor: '#e8f5e9' }
+                                }}
+                            >
+                                <CloudUpload sx={{ fontSize: 50, color: '#2e7d32' }} />
+                                <Typography variant="body1" sx={{ mt: 1 }}>
+                                    Drag & Drop an image here or click to select a file
+                                </Typography>
+                                <input 
+                                    type="file" 
+                                    ref={fileInputRef} 
+                                    onChange={handleFileChange} 
+                                    style={{ display: 'none' }}
+                                />
+                            </Box>
                             {preview && (
                                 <Box 
                                     component="img" 
