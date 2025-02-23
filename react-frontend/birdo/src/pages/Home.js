@@ -85,7 +85,7 @@ const Home = () => (
                     fontSize: '1.1rem'
                   }}
                 >
-                  Start Contributing
+                  Start Uploading
                 </Button>
               </motion.div>
             </Grid>

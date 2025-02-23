@@ -277,6 +277,7 @@
         ]
     },
     {
+<<<<<<< Updated upstream
         "animal": "snow leopard",
         "species": "Snow Leopard",
         "location": "Australia",
@@ -324,6 +325,25 @@
         "coordinates": [
             -0.10657139048060073,
             115.59597388519258
+=======
+        "animal": "red panda",
+        "species": "Red Panda",
+        "location": "Australia",
+        "quantity": 1,
+        "coordinates": [
+            -36.93827224384006,
+            139.82283486701613
+        ]
+    },
+    {
+        "animal": "giant panda",
+        "species": "Giant Panda Bear",
+        "location": "Papua New Guinea",
+        "quantity": 1,
+        "coordinates": [
+            -6.573234097568947,
+            143.6307308673036
+>>>>>>> Stashed changes
         ]
     }
 ]
