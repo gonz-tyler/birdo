@@ -285,5 +285,15 @@
             27.82588383007857,
             82.60225961095982
         ]
+    },
+    {
+        "animal": "snow leopard",
+        "species": "Snow Leopard",
+        "location": "Australia",
+        "quantity": 1,
+        "coordinates": [
+            -34.397,
+            150.644
+        ]
     }
 ]
